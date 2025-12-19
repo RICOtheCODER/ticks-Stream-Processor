@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: ticks-Stream-Processor
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: tick-indexer
+      auto-offset-reset: earliest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+
+server:
+  port: 8082
+
+elasticsearch:
+  host: http://localhost:9200
+

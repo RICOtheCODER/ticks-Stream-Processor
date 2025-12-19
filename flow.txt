@@ -1,0 +1,39 @@
+ WebSocket Feed
+       │
+       ▼
+┌──────────────────────────┐
+│   Ingest Service         │
+│ (WebSocket → Avro → Kafka)
+└───────────┬─────────────┘
+            │
+            ▼
+        Kafka Topic
+            │
+      ┌─────┴──────┐
+      │            │
+      ▼            ▼
+┌────────────┐  ┌────────────────┐
+│ TickIndexer│  │ TickAggregator │  ← optional
+│ (→ ES)     │  │ (candles)      │
+└─────┬──────┘  └────────────────┘
+      │
+      ▼
+┌──────────────────────────┐
+│   Elasticsearch Cluster   │
+│   market_ticks index      │
+└───────┬──────────────────┘
+        │
+        ▼
+┌─────────────────────────────┐
+│   Tick Query API Service    │ ← optional but recommended
+
+
+#2 Dhan WebSocket → Spring Boot Feed Decoder → Kafka "ticks"
+                                              ↓
+                                   Tick Indexer Service
+                                     ➝ Bulk ES Insert
+                                     ➝ DLQ + Retry
+                                              ↓
+                                    Elasticsearch 8
+                                              ↓
+                                         Kibana UI
